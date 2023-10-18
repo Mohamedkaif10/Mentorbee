@@ -37,6 +37,33 @@ app.post('/sendOtp', async (req, res) => {
     }
   });
 
+
+  app.post('/verifyOtp', async (req, res) => {
+    const email = req.body.email;
+    const userOTP = req.body.otp;
+  
+    try {
+      // Find the OTP record in the database
+      const otpRecord = await OTPModel.findOne({ email });
+  
+      if (!otpRecord) {
+        res.json({ success: false, message: 'No OTP record found for this email' });
+        return;
+      }
+      if (userOTP === otpRecord.otp) {
+        await OTPModel.deleteOne({ _id: otpRecord._id });
+  
+        res.json({ success: true, message: 'Login successful' });
+      } else {
+        res.json({ success: false, message: 'Invalid OTP' });
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      res.status(500).json({ success: false, message: 'Failed to verify OTP' });
+    }
+  });
+
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
