@@ -1,5 +1,4 @@
 # Mentorbee
 mobile app 
 created with flutter
-and backend with node.js
-with a DB with Mongodb
+and backend with node.js and Mongodb
