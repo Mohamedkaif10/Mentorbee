@@ -33,30 +33,30 @@ app.post('/sendOtp', async (req, res) => {
       res.json({ success: true, message: 'OTP sent successfully' });
     } catch (error) {
       console.error("Error:", error); // Log the error for debugging
+      console.log(error)
       res.status(500).json({ success: false, message: 'Failed to send OTP' });
     }
   });
 
 
   app.post('/verifyOtp', async (req, res) => {
-    const email = req.body.email;
     const userOTP = req.body.otp;
   
     try {
-      // Find the OTP record in the database
-      const otpRecord = await OTPModel.findOne({ email });
+     
+      const otpRecord = await OTPModel.findOne({ otp: userOTP });
   
       if (!otpRecord) {
-        res.json({ success: false, message: 'No OTP record found for this email' });
+        res.json({ success: false, message: 'Invalid OTP' });
         return;
       }
-      if (userOTP === otpRecord.otp) {
-        await OTPModel.deleteOne({ _id: otpRecord._id });
   
-        res.json({ success: true, message: 'Login successful' });
-      } else {
-        res.json({ success: false, message: 'Invalid OTP' });
-      }
+      // Perform your verification logic here
+  
+      // Delete the OTP record to prevent further use of the OTP
+      await OTPModel.deleteOne({ _id: otpRecord._id });
+  
+      res.json({ success: true, message: 'Login successful' });
     } catch (error) {
       console.error("Error:", error);
       res.status(500).json({ success: false, message: 'Failed to verify OTP' });
