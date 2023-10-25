@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'otpPage.dart'; // Import the SecondPage
+import 'otpPage.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert'; // Import dart:convert
 
 class InputBoxWithButton extends StatefulWidget {
   @override
@@ -13,6 +15,48 @@ class _InputBoxWithButtonState extends State<InputBoxWithButton> {
   void dispose() {
     _textController.dispose();
     super.dispose();
+  }
+
+  Future<void> makePostRequest(String email) async {
+    final url = Uri.parse('http://localhost:8010'); // Replace with your API endpoint
+    final response = await http.post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'email': email,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // If the request is successful, navigate to the OTPPage
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SecondPage(),
+        ),
+      );
+    } else {
+      // Handle the error or display a message for failed requests
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Failed to make a POST request.'),
+            actions: <Widget>[
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   @override
@@ -33,21 +77,15 @@ class _InputBoxWithButtonState extends State<InputBoxWithButton> {
               child: TextField(
                 controller: _textController,
                 decoration: InputDecoration(
-                  labelText: 'Enter text',
+                  labelText: 'Enter email',
                 ),
               ),
             ),
             ElevatedButton(
               onPressed: () {
-                String inputText = _textController.text;
-                print("Input Text: $inputText");
-                // Navigate to the SecondPage when the button is pressed
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SecondPage(),
-                  ),
-                );
+                String email = _textController.text;
+                print("Email: $email");
+                makePostRequest(email);
               },
               child: Text('Submit'),
             ),
