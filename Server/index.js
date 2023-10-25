@@ -43,13 +43,13 @@ app.post('/sendOtp', async (req, res) => {
     const userOTP = req.body.otp;
   
     try {
-     
       const otpRecord = await OTPModel.findOne({ otp: userOTP });
   
       if (!otpRecord) {
-        res.json({ success: false, message: 'Invalid OTP' });
-        return;
+        // Return a 400 status code for a bad request
+        return res.status(400).json({ success: false, message: 'Invalid OTP' });
       }
+  
       // Perform your verification logic here
   
       // Delete the OTP record to prevent further use of the OTP
@@ -61,6 +61,7 @@ app.post('/sendOtp', async (req, res) => {
       res.status(500).json({ success: false, message: 'Failed to verify OTP' });
     }
   });
+  
 
 
 app.listen(port, () => {

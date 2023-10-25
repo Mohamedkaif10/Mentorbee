@@ -16,56 +16,54 @@ class _SecondPageState extends State<SecondPage> {
     _textController.dispose();
     super.dispose();
   }
+Future<void> makePostRequest(String otp) async {
+  final url = Uri.parse('http://localhost:8010/verifyOtp'); // Replace with your API endpoint
+  try {
+    final response = await http.post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'otp': otp,
+      }),
+    );
 
-  Future<void> makePostRequest(String text) async {
-    final url = Uri.parse('http://localhost:8010/verifyOtp'); // Replace with your API endpoint
-    try {
-      final response = await http.post(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(<String, dynamic>{
-          'text': text,
-        }),
+    if (response.statusCode == 200) {
+      // If the request is successful, navigate to the ThirdPage
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ThirdPage(),
+        ),
       );
-
-      if (response.statusCode == 200) {
-        // If the request is successful, navigate to the ThirdPage
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ThirdPage(),
-          ),
-        );
-      } else {
-        // Handle the error or display a message for failed requests
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text('Error'),
-              content: Text('Failed to make a POST request.'),
-              actions: <Widget>[
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      }
-    } catch (error) {
-      print('Error: $error'); // Print the error to the console
+    } else if (response.statusCode == 400) {
+      // Handle a 400 status code (Bad Request) by showing an error message
       showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: Text('Error'),
-            content: Text('Failed to make a POST request. Check your network connection.'),
+            content: Text('Invalid OTP. Please enter a valid OTP.'),
+            actions: <Widget>[
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      // Handle other error status codes or display a generic error message
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Failed to make a POST request.'),
             actions: <Widget>[
               ElevatedButton(
                 onPressed: () {
@@ -78,7 +76,27 @@ class _SecondPageState extends State<SecondPage> {
         },
       );
     }
+  } catch (error) {
+    print('Error: $error'); // Print the error to the console
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text('Failed to make a POST request. Check your network connection.'),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -103,9 +121,9 @@ class _SecondPageState extends State<SecondPage> {
             ),
             ElevatedButton(
               onPressed: () {
-                String text = _textController.text;
-                print("Text: $text");
-                makePostRequest(text);
+                String otp = _textController.text;
+                print("Otp: $otp");
+                makePostRequest(otp);
               },
               child: Text('Submit'),
             ),
