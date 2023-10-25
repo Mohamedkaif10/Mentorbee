@@ -50,7 +50,6 @@ app.post('/sendOtp', async (req, res) => {
         res.json({ success: false, message: 'Invalid OTP' });
         return;
       }
-  
       // Perform your verification logic here
   
       // Delete the OTP record to prevent further use of the OTP

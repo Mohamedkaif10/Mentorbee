@@ -16,9 +16,9 @@ class _InputBoxWithButtonState extends State<InputBoxWithButton> {
     _textController.dispose();
     super.dispose();
   }
-
-  Future<void> makePostRequest(String email) async {
-    final url = Uri.parse('http://localhost:8010'); // Replace with your API endpoint
+Future<void> makePostRequest(String email) async {
+  try {
+    final url = Uri.parse('http://localhost:8010/sendOtp');
     final response = await http.post(
       url,
       headers: <String, String>{
@@ -30,7 +30,6 @@ class _InputBoxWithButtonState extends State<InputBoxWithButton> {
     );
 
     if (response.statusCode == 200) {
-      // If the request is successful, navigate to the OTPPage
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -38,13 +37,12 @@ class _InputBoxWithButtonState extends State<InputBoxWithButton> {
         ),
       );
     } else {
-      // Handle the error or display a message for failed requests
       showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: Text('Error'),
-            content: Text('Failed to make a POST request.'),
+            content: Text('Failed to make a POST request. Status Code: ${response.statusCode}'),
             actions: <Widget>[
               ElevatedButton(
                 onPressed: () {
@@ -57,7 +55,28 @@ class _InputBoxWithButtonState extends State<InputBoxWithButton> {
         },
       );
     }
+  } catch (e) {
+    print('Error: $e'); // Print the error to the console
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text('Failed to make a POST request. Check your network connection.'),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
