@@ -5,9 +5,9 @@ class CounsellingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Counselling'),
+        title: const Text('Counselling'),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Counselling Page Content'),
       ),
     );

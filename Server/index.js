@@ -5,7 +5,7 @@ const dotenv = require("dotenv").config();
 const some = require("./middleware/otp");
 const mail = require("./middleware/email");
 const OTPModel = require("./model/otpmodel"); // Import your Mongoose model
-
+const BuddyModel = require('./model/buddyModel');
 connectDb();
 
 const app = express();
@@ -62,7 +62,14 @@ app.post('/sendOtp', async (req, res) => {
     }
   });
   
-
+  app.get('/buddies', async (req, res) => {
+    try {
+        const data = await BuddyModel.find({}).exec();
+        res.status(200).json(data);
+    } catch (err) {
+        res.status(500).send('Error fetching data');
+    }
+});
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
