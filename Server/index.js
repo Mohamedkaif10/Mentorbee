@@ -70,6 +70,18 @@ app.post('/sendOtp', async (req, res) => {
         res.status(500).send('Error fetching data');
     }
 });
+app.get('/buddies/:id', async (req, res) => {
+  try {
+    const buddy = await BuddyModel.findById(req.params.id).exec();
+    if (buddy) {
+      res.status(200).json(buddy);
+    } else {
+      res.status(404).send('Buddy not found');
+    }
+  } catch (err) {
+    res.status(500).send('Error fetching data');
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

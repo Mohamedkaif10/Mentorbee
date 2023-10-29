@@ -32,7 +32,6 @@ dependencies:
     sdk: flutter
   http: ^1.1.0  
   standard_searchbar: ^2.0.3
-  flutter_search_bar: ^2.1.0
   material_floating_search_bar: ^0.3.7
 
   # The following adds the Cupertino Icons font to your application.
