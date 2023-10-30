@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'payment_page.dart';
 
 class BookAppointmentPage extends StatefulWidget {
   final Map<String, dynamic> buddyDetails;
+  final String sessionPrice;
 
-  BookAppointmentPage({required this.buddyDetails});
+   BookAppointmentPage({required this.buddyDetails,  this.sessionPrice=''});
 
   @override
   _BookAppointmentPageState createState() => _BookAppointmentPageState();
@@ -29,18 +31,18 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
       child: Container(
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.all(8),
-       decoration: BoxDecoration(
+        decoration: BoxDecoration(
           color: isSelected ? Colors.blue : null,
           borderRadius: BorderRadius.circular(30.0),
-           border: Border.all(
-          color: Color.fromARGB(255, 205, 200, 200),
-          width: 2.0,
+          border: Border.all(
+            color: Color.fromARGB(255, 205, 200, 200),
+            width: 2.0,
+          ),
         ),
-        ),
-        
         child: Text(
           text,
-          style: TextStyle(fontSize: 18, color: isSelected ? Colors.white : null),
+          style:
+              TextStyle(fontSize: 18, color: isSelected ? Colors.white : null),
         ),
       ),
     );
@@ -67,9 +69,8 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                 style: TextStyle(fontSize: 18),
               ),
               Row(
-                
                 children: [
-                    getGestureContainer('Today', () {
+                  getGestureContainer('Today', () {
                     setState(() {
                       sessionDay = 'Today';
                     });
@@ -139,11 +140,11 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
               ),
               if (sessionPrice.isNotEmpty)
                 Container(
-                   width: double.infinity,
-                   decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.0),
-                 color: Color.fromARGB(255, 79, 145, 199),
-                 ),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                    color: Color.fromARGB(255, 79, 145, 199),
+                  ),
                   margin: EdgeInsets.only(top: 10),
                   padding: EdgeInsets.all(10),
                   child: Text(
@@ -154,21 +155,30 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20), 
-             ElevatedButton(
-  style: ButtonStyle(
-    minimumSize: MaterialStateProperty.all(Size(double.infinity, 50)),
-    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-      RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0), // Change the border radius here
-      ),
-    ),
-  ),
-  onPressed: () {
-    // Add your appointment booking logic here
-  },
-  child: Text('Pay', style: TextStyle(fontSize: 18)),
-),
+              SizedBox(height: 20),
+              ElevatedButton(
+                style: ButtonStyle(
+                  minimumSize:
+                      MaterialStateProperty.all(Size(double.infinity, 50)),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          12.0), // Change the border radius here
+                    ),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          PaymentPage (amount:sessionPrice),
+                    ),
+                  );
+                  // Add your appointment booking logic here
+                },
+                child: Text('Pay', style: TextStyle(fontSize: 18)),
+              ),
             ],
           ),
         ),
