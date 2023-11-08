@@ -19,10 +19,10 @@ class _BookAppointmentPageState extends State<BookAppointmentPageMenti> {
 
   Map<String, String> durationPrices = {
     '20 Minutes': '1 rupees',
-    '30 Minutes': '70 rupees',
-    '40 Minutes': '80 rupees',
-    '50 Minutes': '100 rupees',
-    '60 Minutes': '120 rupees',
+    '30 Minutes': '2 rupees',
+    '40 Minutes': '3 rupees',
+    '50 Minutes': '4 rupees',
+    '60 Minutes': '5 rupees',
   };
 
   Widget getGestureContainer(String text, Function() onTap, bool isSelected) {

@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'buddies_page.dart'; // Import the BuddiesPage
 import 'counselling_page.dart'; // Import the CounsellingPage
 
-class ThirdPage extends StatelessWidget {
+class ThirdPage extends StatefulWidget {
+  @override
+  _ThirdPageState createState() => _ThirdPageState();
+}
+
+class _ThirdPageState extends State<ThirdPage> {
+  int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,6 +72,45 @@ class ThirdPage extends StatelessWidget {
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
+        currentIndex: _currentIndex,
+        onTap: (int index) {
+          setState(() {
+            _currentIndex = index;
+          });
+          if (index == 0) {
+            // Navigate to the Home page
+            // Update the currentIndex when navigating to the Home page
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ThirdPage(),
+              ),
+            ).then((value) {
+              setState(() {
+                _currentIndex = 0;
+              });
+            });
+          } else if (index == 1) {
+            // Navigate to the Community page
+            // Add your community page route here
+          } else if (index == 2) {
+            // Navigate to the BuddiesPage
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BuddiesPage(),
+              ),
+            );
+          } else if (index == 3) {
+            // Navigate to the CounsellingPage
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MentisPage(),
+              ),
+            );
+          }
+        },
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
