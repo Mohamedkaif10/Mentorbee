@@ -96,9 +96,9 @@ app.get('/mentis', async (req, res) => {
 });
 app.get('/mentis/:id', async (req, res) => {
 try {
-  const buddy = await MentiModel.findById(req.params.id).exec();
-  if (buddy) {
-    res.status(200).json(buddy);
+  const mentis = await MentiModel.findById(req.params.id).exec();
+  if (mentis) {
+    res.status(200).json(mentis);
   } else {
     res.status(404).send('Menti not found');
   }
@@ -108,5 +108,5 @@ try {
 });
 
 app.listen(port, '192.168.31.173', () => {
-  console.log(`Server running on http://192.168.31.173:${port}`);
+  console.log(`Server running on 192.168.31.173:${port}`);
 });

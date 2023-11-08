@@ -39,7 +39,7 @@ class ThirdPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CounsellingPage(),
+                        builder: (context) => MentisPage(),
                       ),
                     );
                   },
