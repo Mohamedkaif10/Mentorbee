@@ -15,10 +15,10 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
   String sessionDay = 'Today'; // Default value
   String sessionDuration = '30 Minutes'; // Default value
   String sessionTime = '5:00 PM'; // Default value
-  String sessionPrice = ''; // Variable to store the session price
+ int sessionPrice = 0;
 
   Map<String, String> durationPrices = {
-    '20 Minutes': '60 rupees',
+    '20 Minutes': '1 rupees',
     '30 Minutes': '70 rupees',
     '40 Minutes': '80 rupees',
     '50 Minutes': '100 rupees',
@@ -100,7 +100,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                   return getGestureContainer(duration, () {
                     setState(() {
                       sessionDuration = duration;
-                      sessionPrice = durationPrices[sessionDuration] ?? '';
+                       sessionPrice = int.tryParse(durationPrices[sessionDuration]?.split(' ')[0] ?? '0') ?? 0;
                     });
                   }, sessionDuration == duration);
                 }).toList(),
@@ -138,7 +138,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                   }, sessionTime == '9:00 PM'),
                 ],
               ),
-              if (sessionPrice.isNotEmpty)
+              if (sessionPrice!=0)
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
@@ -148,7 +148,7 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                   margin: EdgeInsets.only(top: 10),
                   padding: EdgeInsets.all(10),
                   child: Text(
-                    sessionPrice,
+                    '$sessionPrice rupees',
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.white,
@@ -168,11 +168,12 @@ class _BookAppointmentPageState extends State<BookAppointmentPage> {
                   ),
                 ),
                 onPressed: () {
+                 
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          PaymentPage (amount:sessionPrice),
+                          PaymentPage (amount: sessionPrice),
                     ),
                   );
                   // Add your appointment booking logic here

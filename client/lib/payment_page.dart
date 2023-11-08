@@ -1,49 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:upi_india/upi_india.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PaymentPage extends StatefulWidget {
-  final String amount;
+  final int amount; // Assuming the amount is an integer, adjust the type accordingly
 
   PaymentPage({required this.amount});
 
   @override
   _PaymentPageState createState() => _PaymentPageState();
 }
+
 class _PaymentPageState extends State<PaymentPage> {
-  UpiIndia _upiIndia = UpiIndia();
-  List<UpiApp>? apps;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadUpiApps();
-  }
-
-Future<UpiResponse> initiateTransaction(UpiApp app) async {
-    return _upiIndia.startTransaction(
-      app: app,
-      receiverUpiId: "9078600498@ybl",
-      receiverName: 'Md Azharuddin',
-      transactionRefId: 'TestingUpiIndiaPlugin',
-      transactionNote: 'Not actual. Just an example.',
-      amount: double.parse(widget.amount), // Parse the amount to a double
-    );
-  }
-  Future<void> _loadUpiApps() async {
-    try {
-      List<UpiApp>? result = await _upiIndia.getAllUpiApps(mandatoryTransactionId: false);
-      if (result != null) {
-        setState(() {
-          apps = result;
-        });
-      }
-    } catch (e) {
-      setState(() {
-        apps = [];
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,16 +26,20 @@ Future<UpiResponse> initiateTransaction(UpiApp app) async {
               style: TextStyle(fontSize: 20),
             ),
             ElevatedButton(
-              onPressed: () {
-                // Example initiation of the UPI transaction
-                initiateTransaction(UpiApp.googlePay);
-              },
+              onPressed: () => _launchUPI(),
               child: Text('Proceed to Pay', style: TextStyle(fontSize: 18)),
             ),
-            // Additional widgets and logic
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _launchUPI() async {
+    final Uri _url = Uri.parse('upi://pay?pa=mkaif7736@oksbi&pn=Mohamed-kaif&am=${widget.amount}&cu=INR');
+
+    if (!await launchUrl(_url)) {
+      throw Exception('Could not launch $_url');
+    }
   }
 }

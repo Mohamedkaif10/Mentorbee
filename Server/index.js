@@ -6,14 +6,17 @@ const some = require("./middleware/otp");
 const mail = require("./middleware/email");
 const OTPModel = require("./model/otpmodel"); // Import your Mongoose model
 const BuddyModel = require('./model/buddyModel');
+const MentiModel =require("./model/mentiModel")
 connectDb();
 
 const app = express();
+const cors = require('cors');
+app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-const port = process.env.PORT || 8010;
+const port = process.env.PORT || 8001;
 
 app.use(express.json());
 
@@ -83,6 +86,27 @@ app.get('/buddies/:id', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+app.get('/mentis', async (req, res) => {
+  try {
+      const data = await MentiModel.find({}).exec();
+      res.status(200).json(data);
+  } catch (err) {
+      res.status(500).send('Error fetching data');
+  }
+});
+app.get('/mentis/:id', async (req, res) => {
+try {
+  const buddy = await MentiModel.findById(req.params.id).exec();
+  if (buddy) {
+    res.status(200).json(buddy);
+  } else {
+    res.status(404).send('Menti not found');
+  }
+} catch (err) {
+  res.status(500).send('Error fetching data');
+}
+});
+
+app.listen(port, '192.168.31.173', () => {
+  console.log(`Server running on http://192.168.31.173:${port}`);
 });
